@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from ckeditor.fields import RichTextField
 # Create your models here.
 
 
@@ -25,7 +25,7 @@ class Category(BaseModel):
 
 class Course(BaseModel):
     name = models.CharField(max_length=255)
-    description= models.TextField()
+    description=RichTextField()
     image = models.ImageField(upload_to='courses/%Y/%m/')
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
 
