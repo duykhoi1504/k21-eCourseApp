@@ -11,7 +11,7 @@ class MyCourseAdmin(admin.ModelAdmin):
 
     def my_image(self,instance):
         if instance:
-            return mark_safe(f"<img width='120' src='/static/{instance.image.name}'/>")
+            return mark_safe(f"<img width='400' src='/static/{instance.image.name}'/>")
 
     class Media:
         css={

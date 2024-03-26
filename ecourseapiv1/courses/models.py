@@ -4,6 +4,10 @@ from ckeditor.fields import RichTextField
 # Create your models here.
 
 
+class User(AbstractUser):
+    pass
+
+
 class BaseModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
@@ -11,10 +15,6 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class User(AbstractUser):
-    pass
 
 
 class Category(BaseModel):
