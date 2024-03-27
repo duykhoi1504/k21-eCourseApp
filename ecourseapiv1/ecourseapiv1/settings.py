@@ -91,6 +91,15 @@ DATABASES = {
     }
 }
 
+import cloudinary
+
+cloudinary.config(
+    cloud_name="dv1bcrixv",
+    api_key="268535964685532",
+    api_secret="WYhzDqN8xtpDUlfhUWSBCUs7pkU"
+)
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
