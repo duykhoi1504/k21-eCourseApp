@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 from pathlib import Path
@@ -18,7 +19,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_ROOT = '%s/courses/static/' % BASE_DIR
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -39,15 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'courses',
     'ckeditor',
     'ckeditor_uploader',
-    'rest_framework'
+    'rest_framework',
+    'django.contrib.staticfiles',
+    'drf_yasg',
 ]
+
+
 CKEDITOR_UPLOAD_PATH = "ckeditors/images/"
 
-AUTH_USER_MODEL='courses.User'
+AUTH_USER_MODEL = 'courses.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -99,7 +102,6 @@ cloudinary.config(
     api_key="268535964685532",
     api_secret="WYhzDqN8xtpDUlfhUWSBCUs7pkU"
 )
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
