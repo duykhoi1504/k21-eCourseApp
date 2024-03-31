@@ -1,6 +1,6 @@
-from rest_framework import viewsets, generics,status
+from rest_framework import viewsets, generics,status,parsers
 from courses import serializers, paginators
-from courses.models import Category, Course,Lesson
+from courses.models import Category, Course,Lesson,User
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -52,3 +52,9 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     # prefetch_related('tags') lấy sẵn cái tag
     queryset = Lesson.objects.prefetch_related('tags').filter(active=True)
     serializer_class =  serializers.LessonDetailsSerializer
+
+
+class UserViewSet(viewsets.ViewSet,generics.CreateAPIView):
+    queryset=User.objects.filter(is_active=True)
+    serializer_class = serializers.UserSerializer
+    parser_classes = [parsers.MultiPartParser,]
