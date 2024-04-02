@@ -1,5 +1,5 @@
 from rest_framework import viewsets, generics, status, parsers, permissions
-from courses import serializers, paginators
+from courses import serializers, paginators,perms
 from courses.models import Category, Course, Lesson, User, Comment
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -98,3 +98,9 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
             user.save()
 
         return Response(serializers.UserSerializer(user).data)
+
+
+class CommentViewSet(viewsets.ViewSet,generics.DestroyAPIView,generics.UpdateAPIView):
+    queryset=Comment.objects.all()
+    serializer_class=serializers.CommentSerializer
+    permission_classes = [perms.CommentOwner]
