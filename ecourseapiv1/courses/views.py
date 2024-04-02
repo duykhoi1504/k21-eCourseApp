@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics,status,parsers
+from rest_framework import viewsets, generics,status,parsers,permissions
 from courses import serializers, paginators
 from courses.models import Category, Course,Lesson,User
 from rest_framework.decorators import action
@@ -53,8 +53,48 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Lesson.objects.prefetch_related('tags').filter(active=True)
     serializer_class =  serializers.LessonDetailsSerializer
 
+    @action(methods=['get'],url_path='comments',detail=True)
+    def get_comments(self,request,pk):
+        #
+        # queryset = self.filter_queryset(self.get_queryset())
+        #
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = serializers.CommentSerializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
+        #
+        # serializer = self.get_serializer(queryset, many=True)
+        # return Response(serializer.data)
+        #
+        comments=self.get_object().comment_set.order_by('-id')
+
+        paginator=paginators.CommentPaginator()
+        page = paginator.paginate_queryset(comments,request)
+        if page is not None:
+            serializer = serializers.CommentSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+
+        return Response(serializers.CommentSerializer(comments,many=True).data)
+
 
 class UserViewSet(viewsets.ViewSet,generics.CreateAPIView):
     queryset=User.objects.filter(is_active=True)
     serializer_class = serializers.UserSerializer
     parser_classes = [parsers.MultiPartParser,]
+
+    def get_permissions(self):
+        if self.action in['get_current_user']:
+            return [permissions.IsAuthenticated()]
+
+        return [permissions.AllowAny()]
+
+    @action(methods=['get','patch'],url_path='current-user',detail=False)
+    def get_current_user(self,request):
+
+        user=request.user
+        if request.method.__eq__('PATCH'):
+            for k, v in request.data.items():
+                setattr(user,k,v)
+            user.save()
+
+        return Response(serializers.UserSerializer(user).data)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from courses.models import Category, Course, Lesson,Tag,User
+from courses.models import Category, Course, Lesson,Tag,User,Comment
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,6 +56,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+    
     class Meta:
         model=User
         fields=['id','first_name','last_name','email','username','password','avatar']
@@ -66,3 +68,10 @@ class UserSerializer(serializers.ModelSerializer):
                 'write_only':True
             }
         }
+
+class CommentSerializer(serializers.ModelSerializer):
+    user=UserSerializer()
+
+    class Meta:
+        model=Comment
+        fields=['id','content','created_date','user']
