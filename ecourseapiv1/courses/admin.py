@@ -1,7 +1,26 @@
 from django.contrib import admin
+from django.db.models import Count
+from django.template.response import TemplateResponse
+
 from courses.models import  Category, Course,Lesson,User,Tag,Comment,Like
 from django.utils.html import mark_safe
 # Register your models here.
+from django.urls import path
+
+class MyCourseAdminSite(admin.AdminSite):
+    site_header = 'eCourseOnline'
+
+    def get_urls(self):
+        return [path('course-stats/', self.stats_view)]+super().get_urls()
+
+    def stats_view(self,request):
+        course_stats=Category.objects.annotate(c=Count('course__id')).values('id','name','c')
+        return TemplateResponse(request,'admin/stats.html',{
+            "course_stats":course_stats
+        })
+
+admin_site=MyCourseAdminSite(name='iCourse')
+
 
 class MyCourseAdmin(admin.ModelAdmin):
     list_display = ['id','name','created_date','updated_date','active']
@@ -18,11 +37,11 @@ class MyCourseAdmin(admin.ModelAdmin):
             'all':('/static/css/style.css',)
     }
 
-admin.site.register(Category)
-admin.site.register(Course,MyCourseAdmin)
-admin.site.register(Lesson)
-admin.site.register(User)
-admin.site.register(Tag)
+admin_site.register(Category)
+admin_site.register(Course,MyCourseAdmin)
+admin_site.register(Lesson)
+admin_site.register(User)
+admin_site.register(Tag)
 #new
-admin.site.register(Comment)
-admin.site.register(Like)
+admin_site.register(Comment)
+admin_site.register(Like)
