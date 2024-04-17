@@ -60,6 +60,7 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 
     @action(methods=['get'], url_path='comments', detail=True)
     def get_comments(self, request, pk):
+        ######################################################
         comments = self.get_object().comment_set.select_related('user').order_by('-id')
 
         paginator = paginators.CommentPaginator()
@@ -67,7 +68,7 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
         if page is not None:
             serializer = serializers.CommentSerializer(page, many=True)
             return paginator.get_paginated_response(serializer.data)
-
+        ######################################################
         return Response(serializers.CommentSerializer(comments, many=True).data)
 
     @action(methods=['post'], url_path='comments', detail=True)
@@ -82,6 +83,8 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
     parser_classes = [parsers.MultiPartParser, ]
 
+
+    #Kiem tra quyen
     def get_permissions(self):
         if self.action in ['get_current_user']:
             return [permissions.IsAuthenticated()]
