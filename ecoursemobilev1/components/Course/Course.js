@@ -5,8 +5,9 @@ import APIs, { endpoints } from "../../configs/APIs";
 import { Chip, List, Searchbar } from "react-native-paper";
 import moment from "moment";
 import "moment/locale/vi"
+import Item from "../Utils/Item";
 
-const Course = ({navigation}) => {
+const Course = ({ navigation }) => {
     //nap lan du va duy nhat
     const [categories, setCategories] = React.useState(null);
     const [courses, setCourses] = React.useState([]);
@@ -86,10 +87,11 @@ const Course = ({navigation}) => {
             <ScrollView onScroll={loadMore}>
                 <RefreshControl onRefresh={() => loadCourses()} />
                 {loading && <ActivityIndicator />}
-                {courses.map(c => <TouchableOpacity key={c.id} onPress={() => navigation.navigate('Lesson', {"courseId": c.id})}>
-                    <List.Item style={MyStyles.margin} title={c.subject}
+                {courses.map(c => <TouchableOpacity key={c.id} onPress={() => navigation.navigate('Lesson', { "courseId": c.id })}>
+                    {/* <List.Item style={MyStyles.margin} title={c.subject}
                         description={moment(c.created_date).fromNow()}
-                        left={() => <Image style={MyStyles.avatar} source={{ uri: c.image }} />} />
+                        left={() => <Image style={MyStyles.avatar} source={{ uri: c.image }} />} /> */}
+                    <Item instance={c} />
                 </TouchableOpacity>)}
                 {loading && page > 1 && <ActivityIndicator />}
             </ScrollView>

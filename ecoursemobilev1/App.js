@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import Lesson from './components/Course/Lesson';
-import { Title } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
 
