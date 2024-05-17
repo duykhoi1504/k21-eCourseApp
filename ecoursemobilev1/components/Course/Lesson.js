@@ -1,13 +1,14 @@
 import MyStyles from "../../styles/MyStyles";
-import { View, Text, ActivityIndicator } from "react-native"
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native"
 import APIs, { endpoints } from "../../configs/APIs";
 import React from "react";
+import Item from "../Utils/Item";
 
-const Lesson = ({ route }) => {
+const Lesson = ({ route, navigation }) => {
     const [lessons, setLessons] = React.useState(null);
-    const courseId = route.param?.courseId;
+    const courseId = route.params?.courseId;
 
-    const loadLesson = async () => {
+    const loadLessons = async () => {
         try {
             let res = await APIs.get(endpoints['lessons'](courseId));
             setLessons(res.data);
@@ -17,19 +18,19 @@ const Lesson = ({ route }) => {
     }
 
     React.useEffect(() => {
-        loadLesson();
+        loadLessons();
     }, [courseId]);
 
     return (
         <View style={[MyStyles.container, MyStyles.margin]}>
             <Text style={MyStyles.subject}>DANH MỤC BÀI HỌC {courseId}</Text>
-            {lessons === null?<ActivityIndicator />:<>
-                {lessons.map(l => <TouchableOpacity key={l.id}>
+            {lessons === null ? <ActivityIndicator /> : <>
+                {lessons.map(l => <TouchableOpacity key={l.id} ress={() => navigation.navigate("LessonDetails", {lessonId: l.id})}>
                     <Item instance={l} />
                 </TouchableOpacity>)}
             </>}
         </View>
-    )
+    );
 }
 
 export default Lesson;
