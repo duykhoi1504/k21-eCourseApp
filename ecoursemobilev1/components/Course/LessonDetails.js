@@ -1,13 +1,17 @@
 import MyStyles from "../../styles/MyStyles";
-import { View, ActivityIndicator } from "react-native"
+import { View, ActivityIndicator, ScrollView, useWindowDimensions, Image } from "react-native"
 import React from 'react';
 import APIs, { endpoints } from "../../configs/APIs";
-import { Card, Text } from "react-native-paper";
+import { Card, List, Text } from "react-native-paper";
+import RenderHTML from "react-native-render-html";
+import { isCloseToBottom } from "../Utils/Utils";
+import moment from "moment";
 
 const LessonDetails = ({ route }) => {
     const [lesson, setLesson] = React.useState(null);
     const [comments, setComments] = React.useState(null);
-    const lessonId = route.param?.lessonId;
+    const lessonId = route.params?.lessonId;
+    const { width } = useWindowDimensions();
 
     const loadLesson = async () => {
         try {
@@ -31,18 +35,31 @@ const LessonDetails = ({ route }) => {
         loadLesson();
     }, [lessonId]);
 
+    const loadMoreInfo = ({nativeEvent}) => {
+        if (!comments && isCloseToBottom(nativeEvent)) {
+            loadComments();
+        }
+    }
+
     return (
         <View style={[MyStyles.container, MyStyles.margin]}>
-            {lesson === null ? <ActivityIndicator /> : <>
-                <Card>
-                    <Card.Title title="Card Title" subtitle="Card Subtitle" />
-                    <Card.Content>
-                        <Text variant="titleLarge">{lesson.subject}</Text>
-                        <Text variant="bodyMedium">Card content</Text>
-                    </Card.Content>
-                    <Card.Cover source={{ uri: lesson.image }} />
-                </Card>
-            </>}
+            <ScrollView onScroll={loadMoreInfo}>
+                {lesson === null ? <ActivityIndicator /> : <>
+                    <Card>
+                        <Card.Title titleStyle={MyStyles.subject} title={lesson.subject} />
+                        <Card.Cover source={{ uri: lesson.image }} />
+                        <Card.Content>
+                            <RenderHTML contentWidth={width} source={{html: lesson.content}}/>
+                        </Card.Content>
+                    </Card>
+                </>}
+
+                {comments===null?<ActivityIndicator />:<>
+                    {comments.map(c =>  <List.Item style={MyStyles.margin}  title={c.content}
+                   description={moment(c.created_date).fromNow()} 
+                   left={() => <Image style={MyStyles.avatar} source={{uri: c.user.avatar}} />} />)}
+                </>}
+            </ScrollView>
         </View>
     );
 }

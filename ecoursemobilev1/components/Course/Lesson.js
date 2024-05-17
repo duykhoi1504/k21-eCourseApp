@@ -25,7 +25,7 @@ const Lesson = ({ route, navigation }) => {
         <View style={[MyStyles.container, MyStyles.margin]}>
             <Text style={MyStyles.subject}>DANH MỤC BÀI HỌC {courseId}</Text>
             {lessons === null ? <ActivityIndicator /> : <>
-                {lessons.map(l => <TouchableOpacity key={l.id} ress={() => navigation.navigate("LessonDetails", {lessonId: l.id})}>
+                {lessons.map(l => <TouchableOpacity key={l.id} onPress={() => navigation.navigate("LessonDetails", {lessonId: l.id})}>
                     <Item instance={l} />
                 </TouchableOpacity>)}
             </>}

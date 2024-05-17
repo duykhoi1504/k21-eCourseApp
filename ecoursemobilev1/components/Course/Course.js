@@ -6,6 +6,7 @@ import { Chip, List, Searchbar } from "react-native-paper";
 import moment from "moment";
 import "moment/locale/vi"
 import Item from "../Utils/Item";
+import { isCloseToBottom } from "../Utils/Utils";
 
 const Course = ({ navigation }) => {
     //nap lan du va duy nhat
@@ -56,11 +57,11 @@ const Course = ({ navigation }) => {
         loadCourses();
     }, [q, cateId, page]);
 
-    const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-        const paddingToBottom = 20;
-        return layoutMeasurement.height + contentOffset.y >=
-            contentSize.height - paddingToBottom;
-    };
+    // const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    //     const paddingToBottom = 20;
+    //     return layoutMeasurement.height + contentOffset.y >=
+    //         contentSize.height - paddingToBottom;
+    // };
 
     const loadMore = ({ nativeEvent }) => {
         if (loading === false && isCloseToBottom(nativeEvent)) {
